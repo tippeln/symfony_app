@@ -1,0 +1,4506 @@
+﻿PHPフレームワーク Symfony4入門
+
+
+掲載リスト
+
+
+
+
+リスト2-1
+<?php
+namespace App\Controller;
+
+
+use Symfony\Component\HttpFoundation\Response;
+
+
+class HelloController
+{
+    public function index()
+    {
+        return new Response('Hello Symfony!');
+    }
+}
+
+
+
+
+リスト2-2
+hello:
+  path: /hello
+  controller: App\Controller\HelloController::index
+
+
+
+
+リスト2-3
+<?php
+namespace App\Controller;
+
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index()
+    {
+        return new Response('Hello Symfony!');
+    }
+}
+
+
+
+
+リスト2-4
+<?php
+namespace App\Controller;
+
+
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index()
+    {
+        $result = <<< EOM
+        <html>
+        <head><title>Hello</title></head>
+        <body>
+        <h1>Hello Symfony!</h1>
+        <p>this is Symfony sample page.</p>
+        </body>
+        </html>
+EOM;
+        return new Response($result);
+    }
+}
+
+
+
+
+リスト2-5
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index()
+    {
+        $result = <<< EOM
+        <html>
+        <head><title>Hello</title></head>
+        <body>
+        <h1>Hello Symfony!</h1>
+        <p>this is Symfony sample page.</p>
+        </body>
+        </html>
+EOM;
+        return new Response($result);
+    }
+}
+
+
+
+
+リスト2-6
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index()
+    {
+        $result = '<html><body>';
+        $result .= '<h1>Subscribed Services</h1>';
+        $result .= '<ol>';
+        $arr = $this->getSubscribedServices();
+        foreach ($arr as $key => $value) {
+            $result .= '<li>' . $key . '</li>';
+        }
+        $result.= '</ol>';
+        $result .= '</body></html>';
+        return new Response($result);
+    }
+}
+
+
+
+
+リスト2-7
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello/{name}/{pass}", name="hello")
+     */
+    public function index($name, $pass)
+    {
+        $result = '<html><body><ol>';
+        $result .= '<h1>Parameter</h1>';
+        $result .= '<p>name: ' . $name . '</p>';
+        $result .= '<p>pass: ' . $pass . '</p>';
+        $result .= '</body></html>';
+        return new Response($result);
+    }
+}
+
+
+
+
+リスト2-8
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $name = $request->get('name');
+        $pass = $request->get('pass');
+        $result = '<html><body><ol>';
+        $result .= '<h1>Parameter</h1>';
+        $result .= '<p>name: ' . $name . '</p>';
+        $result .= '<p>pass: ' . $pass . '</p>';
+        $result .= '</body></html>';
+        return new Response($result);
+    }
+}
+
+
+
+
+リスト2-9
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $result = '<html><body><ol>';
+        $result .= '<h1>Parameter</h1>';
+        $result .= '<p>This is index page.</p>';
+        $result .= '</body></html>';
+        return new Response($result);
+    }
+
+
+    /**
+     * @Route("/other/{domain}", name="other")
+     */
+    public function other(Request $request, $domain='')
+    {
+        if ($domain == ''){
+            return $this->redirect('/hello');
+        } else {
+            return new RedirectResponse("http://{$domain}.com");
+        }
+    }
+}
+
+
+
+
+リスト2-10
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $data = array(
+            'name'=>array('first'=>'Taro','second'=>'Yamada'),
+            'age'=>36, 'mail'=>'taro@yamada.kun'
+        );
+        return new JsonResponse($data);
+    }
+}
+
+
+
+
+リスト2-11
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $encoders = array(new XmlEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+
+        $data = array(
+            'name'=>array('first'=>'Hanako','second'=>'Tanaka'),
+            'age'=>29, 'mail'=>'hanako@flower.san'
+        );
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'xml');
+        $result = $serializer->serialize($data, 'xml');
+        $response->setContent($result);
+        return $response;
+    }
+}
+
+
+
+
+リスト2-12
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $content = <<< EOM
+        <html><head><title>Hello</title></head>
+        <body><h1>Hello!</h1>
+        <p>this is Symfony sample page.</p>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );        
+        return $response;
+    }
+
+
+    /**
+     * @Route("/notfound", name="notfound")
+     */
+    public function notfound(Request $request)
+    {
+        $content = <<< EOM
+        <html><head><title>ERROR</title></head>
+        <body><h1>ERROR! 404</h1>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_NOT_FOUND,
+            array('content-type' => 'text/html')
+        );
+        return $response;
+    }
+
+
+    /**
+     * @Route("/error", name="error")
+     */
+    public function error(Request $request)
+    {
+        $content = <<< EOM
+        <html><head><title>ERROR</title></head>
+        <body><h1>ERROR! 500</h1>
+        </body></html>
+EOM;
+        $response = new Response(
+            $content,
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+            array('content-type' => 'text/html')
+        );
+        return $response;
+    }
+}
+
+
+
+
+リスト2-13
+<?php
+namespace App\Controller;
+
+
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request, LoggerInterface $logger)
+    {
+        $data = array(
+            'name'=>array('first'=>'Taro','second'=>'Yamada'),
+            'age'=>36, 'mail'=>'taro@yamada.kun'
+        );
+        $logger->info(serialize($data));
+        return new JsonResponse($data);
+    }
+}
+
+
+
+
+リスト3-1
+<?php
+
+
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index()
+    {
+        return $this->render('hello/index.html.twig', [
+            'controller_name' => 'HelloController',
+        ]);
+    }
+}
+
+
+
+
+リスト3-2
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{controller_name}}</title>
+</head>
+<body>
+    <h1>{{controller_name}}</h1>
+    <p>これは、サンプルのテンプレートによる表示です。</p>
+</body>
+</html>
+
+
+
+
+リスト3-3
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello/{msg}", name="hello")
+     */
+    public function index($msg='Hello!')
+    {
+        return $this->render('hello/index.html.twig', [
+            'controller' => 'HelloController',
+            'action' => 'index',
+            'prev_action' => '(none)',
+            'message' => $msg,
+        ]);
+    }
+
+
+    /**
+     * @Route("/other/{action}/{msg}", name="other")
+     */
+    public function other($action, $msg)
+    {
+        return $this->render('hello/index.html.twig', [
+            'controller' => 'HelloController',
+            'action' => 'other',
+            'prev_action' => $action,
+            'message' => $msg,
+        ]);
+    }
+}
+
+
+リスト3-4
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{controller}}</title>
+</head>
+<body>
+    <h1>{{controller}}</h1>
+    <p>これは、{{prev_action}}アクションから{{action}}に送られたものです。</p>
+    <p>メッセージ：{{message}}</p>
+    <p><a href="/other/{{action}}/{{message}}">next page</a></p>
+</body>
+</html>
+
+
+
+
+リスト3-5
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <p>{{message}}</p>
+    <form action="/other" method="post">
+    <input type="text" name="input">
+    <input type="submit" value="Click" />
+    </form>
+</body>
+</html>
+
+
+
+
+リスト3-6
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {   
+        return $this->render('hello/index.html.twig', [
+            'title' => 'Hello',
+            'message' => 'あなたのお名前：',
+        ]);
+    }
+    /**
+     * @Route("/other", name="other")
+     */
+    public function other(Request $request)
+    {
+        $input = $request->request->get('input');
+        $msg = 'こんにちは、' . $input . 'さん！';
+        return $this->render('hello/index.html.twig', [
+            'title' => 'Hello',
+            'message' => $msg,
+        ]);
+    }
+}
+
+
+
+
+リスト3-7
+<form action="/hello" method="post">
+
+
+
+
+リスト3-8
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {   
+        if ($request->getMethod() == 'POST'){
+            $input = $request->request->get('input');
+            $msg = 'こんにちは、' . $input . 'さん！';
+        } else {
+            $msg = 'お名前は？';
+        }
+        return $this->render('hello/index.html.twig', [
+            'title' => 'Hello',
+            'message' => $msg,
+        ]);
+    }
+}
+
+
+
+
+リスト3-9
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class HelloController extends AbstractController
+{
+   /**
+    * @Route("/hello", name="hello")
+    */
+   public function index(Request $request)
+   {  
+       $form = $this->createFormBuilder()
+           ->add('input', TextType::class)
+           ->add('save', SubmitType::class, ['label' => 'Click'])
+           ->getForm();
+
+
+        if ($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            $msg = 'こんにちは、' . $form->get('input')->getData() . 'さん！';
+        } else {
+            $msg = 'お名前をどうぞ！';
+        }  
+        return $this->render('hello/index.html.twig', [
+           'title' => 'Hello',
+           'message' => $msg,
+           'form' => $form->createView(),
+       ]);
+   }
+}
+
+
+
+
+リスト3-10
+<body>
+    <h1>{{title}}</h1>
+    <p>{{message | raw}}</p>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+</body>
+
+
+
+
+リスト3-11
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class HelloController extends AbstractController
+{
+   /**
+    * @Route("/hello", name="hello")
+    */
+   public function index(Request $request)
+   {  
+        $person = new Person();
+        $person->setName('taro')
+            ->setAge(36)
+            ->setMail('taro@yamada.kun');
+
+
+        $form = $this->createFormBuilder($person)
+           ->add('name', TextType::class)
+           ->add('age', IntegerType::class)
+           ->add('mail', EmailType::class)
+           ->add('save', SubmitType::class, ['label' => 'Click'])
+           ->getForm();
+
+
+        if ($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            $obj = $form->getData();
+            $msg = 'Name: ' . $obj->getName() . '<br>'
+                . 'Age: ' . $obj->getAge() . '<br>'
+                . 'Mail: ' . $obj->getMail();
+        } else {
+            $msg = 'お名前をどうぞ！';
+        }  
+        return $this->render('hello/index.html.twig', [
+           'title' => 'Hello',
+           'message' => $msg,
+           'form' => $form->createView(),
+       ]);
+   }
+}
+
+
+// データクラス
+class Person
+{
+    protected $name;
+    protected $age;
+    protected $mail;
+
+
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+
+    public function getAge()
+    {
+        return $this->age;
+    }
+    public function setAge($age)
+    {
+        $this->age = $age;
+        return $this;
+    }
+
+
+    public function getMail()
+    {
+        return $this->mail;
+    }
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
+        return $this;
+    }
+}
+
+
+
+
+リスト3-12
+<body>
+    <h1>{{title}}</h1>
+    <p>data: {{data}}</p>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+</body>
+
+
+
+
+リスト3-13
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request, SessionInterface $session)
+    {
+        $data = new MyData();
+        $form = $this->createFormBuilder($data)
+            ->add('data', TextType::class)
+            ->add('save', SubmitType::class, ['label' => 'Click'])
+            ->getForm();
+
+
+        if ($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            $data = $form->getData();
+            if ($data->getData() == '!'){
+                $session->remove('data');
+            } else {
+                $session->set('data',$data->getData());
+            }
+        }
+
+
+        return $this->render('hello/index.html.twig', [
+           'title' => 'Hello',
+           'data' => $session->get('data'),
+           'form' => $form->createView(),
+       ]);
+    }
+}
+
+
+// データ用クラス
+class MyData
+{
+    protected $data = '';
+
+
+    public function getData()
+    {
+        return $this->data;
+    }
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+}
+
+
+
+
+リスト3-14
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Hello {{ controller_name }}!{% endblock %}
+
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; 
+        width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✓</h1>
+
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code>
+            <a href="{{ 'src/Controller/HelloController.php'|file_link(0) }}">src/Controller/HelloController.php</a></code></li>
+        <li>Your template at <code>
+        <a href="{{ 'templates/hello/index.html.twig'|file_link(0) }}">templates/hello/index.html.twig</a></code></li>
+    </ul>
+</div>
+{% endblock %}
+
+
+
+
+リスト3-15
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
+
+
+
+
+リスト3-16
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block page %}{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <style>
+        body {
+            padding:0px 30px;
+            color:#666;
+        }
+
+
+        h1 {
+            font-size:72pt;
+            font-weight:bold;
+            text-align:right;
+            letter-spacing:-8px;
+            color:#f0f0f0;
+            margin:-30px -25px;
+        }
+        div.body {
+            margin:-70px 10px 10px 10px;
+            font-size:18pt;
+            color:#777;
+        }
+        div#footer {
+            position: fixed;
+            bottom: 25px;
+            left: 10px;
+            font-size:10pt;
+            color:#aaa;
+        }
+        th {
+            background:#009; 
+            color:white; 
+            padding:5px 15px; 
+            font-size:14pt; 
+        }
+        td {
+            background:#eee; 
+            padding:5px 15px; 
+        }
+        </style>
+    </head>
+    <body>
+        <h1>{% block title %}{% endblock %}</h1>
+        <div class="body">
+        {% block body %}{% endblock %}
+        </div>
+        <div id="footer">
+        <p>copyright 2018 SYODA-Tuyano.
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
+
+
+
+
+リスト3-17
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<p>{{message}}</p>
+{% endblock %}
+
+
+
+
+リスト3-18
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        return $this->render('hello/index.html.twig', [
+           'title' => 'Hello',
+           'message' => 'これはサンプルのテンプレート画面です。',
+       ]);
+    }
+}
+
+
+
+
+リスト3-19
+{% block body %}
+{% set price = 12300 %}
+<p>{{message}}</p>
+<p>金額：{{price}}円</p>
+{% set taxprice = price * 1.08 %}
+<p>税込：{{taxprice}}円</p>
+{% endblock %}
+
+
+
+
+リスト3-20
+public function index(Request $request)
+{
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => 'テンプレートで計算を行います。',
+    ]);
+}
+
+
+
+
+リスト3-21
+{% block body %}
+{% set price = 12300 %}
+{% with %}
+    {% set price = 1000 %}
+    <p>金額：{{price}}円</p>
+    {% set taxprice = price * 1.08 %}
+    <p>税込：{{taxprice}}円</p>
+{% endwith %}
+<p>金額：{{price}}円</p>
+{% set taxprice = price * 1.08 %}
+<p>税込：{{taxprice}}円</p>
+{% endblock %}
+
+
+
+
+リスト3-22
+{% block body %}
+{% set flg = true %}
+{% set message = 'This is sample message.' %}
+{% if flg %}
+    <p>{{message}}</p>
+{% else %}
+    <p>（※メッセージは非表示）</p>
+{% endif %}
+{% endblock %}
+
+
+
+
+リスト3-23
+{% block body %}
+{% set arr = ['One', 'Two', 'Three', 'Four'] %}
+<ul>
+{% for item in arr %}
+<li>{{item}}</li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+
+
+
+リスト3-24
+public function index(Request $request)
+{
+    $data = [
+        array('name'=>'Taro','age'=>37,'mail'=>'taro@yamada'),
+        array('name'=>'Hanako','age'=>29,'mail'=>'hanako@flowe'),
+        array('name'=>'Sachiko','age'=>43,'mail'=>'sachico@happy'),
+        array('name'=>'Jiro','age'=>18,'mail'=>'jiro@change'),
+    ];
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'data' => $data,
+    ]);
+}
+
+
+
+
+リスト3-25
+{% block body %}
+<table>
+<tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Mail</th>
+</tr>
+{% for item in data %}
+<tr>
+    <td>{{item.name}}</td>
+    <td>{{item.age}}</td>
+    <td>{{item.mail}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
+
+リスト3-26
+{% macro input(type, name, value) %}
+<tr>
+    <th>{{ name}}</th>
+    <td><input type="{{ type }}" name="{{ name }}" 
+        value="{{ value }}" /></td>
+</tr>
+{% endmacro %}
+
+
+{% macro submit(value) %}
+<tr>
+    <th></th>
+    <td><input type="submit" 
+        value="{{ value }}" /></td>
+</tr>
+{% endmacro %}
+
+
+
+
+リスト3-27
+{% import 'macro.html.twig' as m %}
+
+
+{% block body %}
+<table>
+{{ m.input('text', 'Name', 'noname') }}
+{{ m.input('number', 'Age', '0') }}
+{{ m.input('email', 'Mail', 'no@mail') }}
+{{ m.submit('Click') }}
+</table>
+{% endblock %}
+
+
+
+
+リスト3-28
+{% import 'macro.html.twig' as m %}
+
+
+<table>
+{{ m.input('text', 'Name', 'noname') }}
+{{ m.input('number', 'Age', '0') }}
+{{ m.input('email', 'Mail', 'no@mail') }}
+{{ m.submit('Click') }}
+</table>
+
+
+
+
+リスト3-29
+{% block body %}
+<p>※フォームを用意します。</p>
+{% include '/hello/form.html.twig' %}
+{% endblock %}
+
+
+
+リスト3-30
+$data = [
+    array('name'=>'Taro','age'=>37,'mail'=>'taro@yamada'),
+    array('name'=>'Hanako','age'=>29,'mail'=>'hanako@flowe'),
+    array('name'=>'Sachiko','age'=>43,'mail'=>'sachico@happy'),
+    array('name'=>'Jiro','age'=>18,'mail'=>'jiro@change'),
+];
+
+
+
+
+リスト3-31
+{% block body %}
+<p>※テーブルを用意します。</p>
+{% include '/hello/table.html.twig' with [data] %}
+{% endblock %}
+
+
+ {% include %}で、with [data] として、コントローラー側から渡された変数dataをそのまま
+
+
+
+
+リスト3-32
+<style>
+.A { background:#ddd; }
+.B { background:#dff; }
+</style>
+<table>
+<tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Mail</th>
+</tr>
+{% set flg = true %}
+{% for item in data %}
+    <tr class="{% if flg %}A{% else %}B{% endif %}">
+        <td>{{item.name}}</td>
+        <td>{{item.age}}</td>
+        <td>{{item.mail}}</td>
+    </tr>
+    {% if flg %}
+        {% set flg = false %}
+    {% else %}
+        {% set flg = true %}
+    {% endif %}
+{% endfor %}
+</table>
+
+
+
+
+リスト3-33
+{% for item in [98,36,59,71,109,52,49] | sort %}
+<li>{{item}}</li>
+{% endfor %}
+
+
+
+
+リスト4-1
+DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
+
+
+
+
+リスト4-2
+DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db
+
+
+
+
+リスト4-3
+CREATE TABLE person (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+    name VARCHAR(255) NOT NULL, 
+    mail VARCHAR(255) DEFAULT NULL, 
+    age INTEGER DEFAULT NULL
+)
+
+
+
+
+リスト4-4
+<?php declare(strict_types=1);
+
+
+namespace DoctrineMigrations;
+
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20180910082734 extends AbstractMigration
+{
+    public function up(Schema $schema) : void
+    {
+        ……略……
+    }
+
+
+    public function down(Schema $schema) : void
+    {
+        ……略……
+    }
+}
+
+
+
+
+リスト4-5
+<?php
+
+
+namespace App\Entity;
+
+
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ */
+class Person
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mail;
+
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $age;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+
+        return $this;
+    }
+
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+
+    public function setMail(?string $mail): self
+    {
+        $this->mail = $mail;
+
+
+        return $this;
+    }
+
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+
+    public function setAge(?int $age): self
+    {
+        $this->age = $age;
+
+
+        return $this;
+    }
+}
+
+
+
+
+リスト4-6
+<?php
+namespace App\Controller;
+
+
+use App\Entity\Person;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        $repository = $this->getDoctrine()
+            ->getRepository(Person::class);
+        $data = $repository->findall();
+        return $this->render('hello/index.html.twig', [
+           'title' => 'Hello',
+           'data' => $data,
+       ]);
+    }
+}
+
+
+
+
+リスト4-7
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Person table</h2>
+<table>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Mail</th>
+    <th>Age</th>
+</tr>
+{% for item in data %}
+<tr>   
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.mail}}</td>
+    <td>{{item.age}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
+
+リスト4-8
+<?php
+
+
+namespace App\Repository;
+
+
+use App\Entity\Person;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+
+
+/**
+ * @method Person|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Person|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Person[]    findAll()
+ * @method Person[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class PersonRepository extends ServiceEntityRepository
+{
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, Person::class);
+    }
+
+
+//    /**
+//     * @return Person[] Returns an array of Person objects
+//     */
+    /*
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    */
+
+
+    /*
+    public function findOneBySomeField($value): ?Person
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
+}
+
+
+
+
+リスト4-9
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Find Entity</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+<hr>
+{% if data != null %}
+    <table>
+        <tr><th>Id</th><td>{{data.id}}</td></tr>
+        <tr><th>Name</th><td>{{data.name}}</td></tr>
+        <tr><th>Mail</th><td>{{data.mail}}</td></tr>
+        <tr><th>Age</th><td>{{data.age}}</td></tr>
+    </table>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+
+
+リスト4-10
+<?php
+namespace App\Controller;
+
+
+use App\Entity\Person;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class HelloController extends AbstractController
+{
+    /**
+     * @Route("/hello", name="hello")
+     */
+    public function index(Request $request)
+    {
+        ……略……
+    }
+
+
+    /**
+     * @Route("/find", name="find")
+     */
+    public function find(Request $request)
+    {
+        $formobj = new FindForm();
+        $form = $this->createFormBuilder($formobj)
+            ->add('find', TextType::class)
+            ->add('save', SubmitType::class, array('label' => 'Click'))
+            ->getForm();
+
+
+        if ($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            $findstr = $form->getData()->getFind();
+            $repository = $this->getDoctrine()
+                ->getRepository(Person::class);
+            $result = $repository->find($findstr);
+        } else {
+            $result = null;
+        }
+        return $this->render('hello/find.html.twig', [
+           'title' => 'Hello',
+           'form' => $form->createView(),
+           'data' => $result,
+       ]);
+    }
+  
+}
+
+
+class FindForm
+{
+    private $find;
+
+
+    public function getFind()
+    {
+        return $this->find;
+    }
+    public function setFind($find)
+    {
+        $this->find = $find;
+    }
+}
+
+
+
+
+リスト4-11
+/**
+ * @Route("/find/{id}", name="find")
+ */
+public function find(Request $request, Person $person)
+{
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'data' => $person,
+    ]);
+}
+
+
+
+
+リスト4-12
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+
+
+
+
+
+
+リスト4-13
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>{{message}}</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+{% endblock %}
+
+
+
+
+リスト4-14
+// use Symfony\Component\Form\Extension\Core\Type\IntegerType; を追記
+
+
+/**
+ * @Route("/create", name="create")
+ */
+public function create(Request $request)
+{
+    $person = new Person();
+    $form = $this->createFormBuilder($person)
+        ->add('name', TextType::class)
+        ->add('mail', TextType::class)
+        ->add('age', IntegerType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $person = $form->getData();
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($person);
+        $manager->flush();
+        return $this->redirect('/hello');
+    } else {
+        return $this->render('hello/create.html.twig', [
+            'title' => 'Hello',
+            'message' => 'Create Entity',
+            'form' => $form->createView(),
+        ]); 
+    }
+}
+
+
+
+
+リスト4-15
+/**
+ * @Route("/update/{id}", name="update")
+ */
+public function update(Request $request, Person $person)
+{
+    $form = $this->createFormBuilder($person)
+        ->add('name', TextType::class)
+        ->add('mail', TextType::class)
+        ->add('age', IntegerType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $person = $form->getData();
+        $manager = $this->getDoctrine()->getManager();
+        $manager->flush();
+        return $this->redirect('/hello');
+    } else {
+        return $this->render('hello/create.html.twig', [
+            'title' => 'Hello',
+            'message' => 'Update Entity id=' . $person->getId(),
+            'form' => $form->createView(),
+        ]); 
+    }
+}
+
+
+
+
+リスト4-16
+/**
+ * @Route("/delete/{id}", name="delete")
+ */
+public function delete(Request $request, Person $person)
+{
+    $form = $this->createFormBuilder($person)
+        ->add('name', TextType::class)
+        ->add('mail', TextType::class)
+        ->add('age', IntegerType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $person = $form->getData();
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($person);
+        $manager->flush();
+        return $this->redirect('/hello');
+    } else {
+        return $this->render('hello/create.html.twig', [
+            'title' => 'Hello',
+            'message' => 'Delete Entity id=' . $person->getId(),
+            'form' => $form->createView(),
+        ]); 
+    }
+}
+
+
+
+
+リスト4-17
+<?php
+namespace App\Form;
+
+
+use App\Entity\Person;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class PersonType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('mail', EmailType::class)
+            ->add('age', IntegerType::class)
+            ->add('save', SubmitType::class, array('label' => 'Click'));
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => Person::class,
+        ));
+    }
+}
+
+
+
+
+リスト4-18
+// 以下のuseを追記
+// use App\Form\PersonType;
+// use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+
+/**
+ * @Route("/create", name="create")
+ */
+public function create(Request $request)
+{
+    $person = new Person();
+    $form = $this->createForm(PersonType::class, $person);
+    $form->handleRequest($request);
+    
+    if ($request->getMethod() == 'POST'){
+        $person = $form->getData();
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($person);
+        $manager->flush();
+        return $this->redirect('/hello');
+    } else {
+        return $this->render('hello/create.html.twig', [
+            'title' => 'Hello',
+            'message' => 'Create Entity',
+            'form' => $form->createView(),
+        ]); 
+    }
+}
+
+
+
+
+リスト5-1
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Find Entity</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+<hr>
+{% if data != null %}
+<ul>
+{% for item in data %}
+<li>{{item.name}}({{item.age}})</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+リスト5-2
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
+{
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $repository = $this->getDoctrine()
+            ->getRepository(Person::class);
+        $result = $repository->findBy(['name' => $findstr]);
+    } else {
+        $result = null;
+    }
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'form' => $form->createView(),
+        'data' => $result,
+    ]);
+}
+
+
+
+
+リスト5-3
+public function findByName($value)
+{
+    return $this->createQueryBuilder('p')
+        ->where('p.name = ?1')
+        ->setParameter(1, $value)
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-4
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
+{
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $repository = $this->getDoctrine()
+            ->getRepository(Person::class);
+        $result = $repository->findByName($findstr); // ●
+    } else {
+        $result = null;
+    }
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'form' => $form->createView(),
+        'data' => $result,
+    ]);
+}
+
+
+
+
+リスト5-5
+public function findByName($value)
+{
+    return $this->createQueryBuilder('p')
+        ->where('p.name like ?1')
+        ->setParameter(1, '%' . $value . '%')
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-6
+public function findByAge($value)
+{
+    return $this->createQueryBuilder('p')
+        ->where('p.age >= ?1')
+        ->setParameter(1, $value)
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-7
+public function findByName($value)
+{   
+    $arr = explode (',',$value);
+    return $this->createQueryBuilder('p')
+        ->where("p.name in (?1, ?2)")
+        ->setParameters(array(1=>$arr[0], 2=>$arr[1]))
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-8
+public function findByName($value)
+{   
+    $builder = $this->createQueryBuilder('p');
+    return $builder
+        ->where($builder->expr()->eq('p.name', '?1'))
+        ->setParameter(1, $value)
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-9
+public function findByName($value)
+{   
+    $arr = explode(',',$value);
+    $builder = $this->createQueryBuilder('p');
+    return $builder
+        ->where($builder->expr()->in('p.name',$arr))
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-10
+public function findByAge($value)
+{
+    $arr = explode(',',$value);
+    $builder = $this->createQueryBuilder('p');
+    return $builder
+        ->where($builder->expr()->gte('p.age', '?1'))
+        ->andWhere($builder->expr()->lte('p.age', '?2'))
+        ->setParameters(array(1 => $arr[0], 2 => $arr[1]))
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-11
+public function findByNameOrMail($value)
+{
+    $builder = $this->createQueryBuilder('p');
+    return $builder
+        ->where($builder->expr()->like('p.name', '?1'))
+        ->orWhere($builder->expr()->like('p.mail', '?2'))
+        ->setParameters(array(1 => '%' . $value . '%', 2 => '%' . $value . '%'))
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-12
+public function findAllwithSort()
+{
+    return $this->createQueryBuilder('p')
+        ->orderBy('p.age', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-13
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
+{
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    $repository = $this->getDoctrine()
+        ->getRepository(Person::class);
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $result = $repository->findByNameOrMail($findstr);
+    } else {
+        $result = $repository->findAllwithSort(); // ●
+    }
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'form' => $form->createView(),
+        'data' => $result,
+    ]);
+}
+
+
+
+
+リスト5-14
+public function findAllwithSort()
+{
+    return $this->createQueryBuilder('p')
+        ->orderBy('p.age', 'DESC')
+        ->setFirstResult(0)
+        ->setMaxResults(3)
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+リスト5-15
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
+{
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    $repository = $this->getDoctrine()
+        ->getRepository(Person::class);
+
+
+    $manager = $this->getDoctrine()->getManager();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $query = $manager->createQuery(
+            "SELECT p FROM App\Entity\Person p 
+            WHERE p.name = '{$findstr}'");
+        $result = $query->getResult();
+    } else {
+        $result = $repository->findAllwithSort();
+    }
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'form' => $form->createView(),
+        'data' => $result,
+    ]);
+}
+
+
+
+
+リスト5-16
+// use Doctrine\ORM\Query\ResultSetMappingBuilder; を追記
+
+
+/**
+ * @Route("/find", name="find")
+ */
+public function find(Request $request)
+{
+    $formobj = new FindForm();
+    $form = $this->createFormBuilder($formobj)
+        ->add('find', TextType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    $repository = $this->getDoctrine()
+        ->getRepository(Person::class);
+
+
+    $manager = $this->getDoctrine()->getManager();
+    $mapping = new ResultSetMappingBuilder($manager);
+    $mapping->addRootEntityFromClassMetadata('App\Entity\Person', 'p');
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        $findstr = $form->getData()->getFind();
+        $arr = explode(',', $findstr);
+        $query = $manager->createNativeQuery(
+            'SELECT * FROM person WHERE age between ?1 AND ?2', $mapping)
+            ->setParameters(array(1 => $arr[0], 2 => $arr[1]));
+        $result = $query->getResult();
+    } else {
+        $query = $manager->createNativeQuery(
+            'SELECT * FROM person', $mapping);
+        $result = $query->getResult();
+    }
+    return $this->render('hello/find.html.twig', [
+        'title' => 'Hello',
+        'form' => $form->createView(),
+        'data' => $result,
+    ]);
+}
+
+
+
+
+リスト5-17
+public function buildForm(FormBuilderInterface $builder, array $options)
+{
+    $builder
+        ->add('name', TextType::class)
+        ->add('mail', EmailType::class)
+        ->add('age', IntegerType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'));
+}
+
+
+
+
+リスト5-18
+public function buildForm(FormBuilderInterface $builder, array $options)
+{
+    $builder
+        ->add('name', TextType::class,  array('required' => false))
+        ->add('mail', TextType::class,  array('required' => false))
+        ->add('age', TextType::class,  array('required' => false))
+        ->add('save', SubmitType::class, array('label' => 'Click'));
+}
+
+
+
+
+リスト5-19
+// use Symfony\Component\Validator\Constraints as Assert; を追記
+
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ */
+class Person
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $name;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Email()
+     * @Assert\NotBlank()
+     */
+    private $mail;
+
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
+     * @Assert\NotBlank()
+     */
+    private $age;
+
+
+    ……略……
+}
+
+
+
+
+リスト5-20
+// use Symfony\Component\Validator\Validator\ValidatorInterface; を追記
+
+
+/**
+ * @Route("/create", name="create")
+ */
+public function create(Request $request, ValidatorInterface $validator)
+{
+    $person = new Person();
+    $form = $this->createForm(PersonType::class, $person);
+    $form->handleRequest($request);
+    
+    if ($request->getMethod() == 'POST'){
+        $person = $form->getData();
+
+
+        $errors = $validator->validate($person);
+
+
+        if (count($errors) == 0) {
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($person);
+            $manager->flush();
+            return $this->redirect('/hello');
+        } else {
+            return $this->render('hello/create.html.twig', [
+                'title' => 'Hello',
+                'message' => 'ERROR!',
+                'form' => $form->createView(),
+            ]); 
+        }
+    } else {
+        return $this->render('hello/create.html.twig', [
+            'title' => 'Hello',
+            'message' => 'Create Entity',
+            'form' => $form->createView(),
+        ]); 
+    }
+}
+
+
+
+
+リスト5-21
+form ul { margin:5px; padding-inline-start:0px; }
+form ul li {color:red; font-size:12pt;
+    list-style-type: none; line-height:0; }
+
+
+
+
+リスト5-22
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ */
+class Person
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="必ず値を入力して下さい。")
+     */
+    private $name;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Email(message="メールアドレスを入力して下さい。")
+     * @Assert\NotBlank(message="必ず値を入力して下さい。")
+     */
+    private $mail;
+
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer", message="整数を入力して下さい。")
+     * @Assert\NotBlank(message="必ず値を入力して下さい。")
+     */
+    private $age;
+
+
+    ……略……
+}
+
+
+
+
+リスト5-23
+/**
+ * @Route("/create", name="create")
+ */
+public function create(Request $request, ValidatorInterface $validator)
+{
+    $form = $this->createFormBuilder()
+        ->add('name', TextType::class, 
+            array(
+                'required' => true,
+                'constraints' => [
+                    new Assert\Length(array(
+                        'min' => 3, 'max' => 10, 
+                        'minMessage' => '３文字以上必要です。',
+                        'maxMessage' => '10文字以内にして下さい。'))
+                ]
+            )
+        )
+        ->add('save', SubmitType::class, array('label' => 'Click'))
+        ->getForm();
+
+
+    if ($request->getMethod() == 'POST'){
+        $form->handleRequest($request);
+        if ($form->isValid()){
+            $msg = 'Hello, ' . $form->get('name')->getData() . '!';
+        } else {
+            $msg = 'ERROR!';
+        }
+    } else {
+        $msg = 'Send Form';
+    }  
+    return $this->render('hello/create.html.twig', [
+        'title' => 'Hello',
+        'message' => $msg,
+        'form' => $form->createView(),
+    ]);
+
+
+}
+
+
+
+
+リスト5-24
+<?php
+
+
+namespace App\Entity;
+
+
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
+ */
+class Message
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="messages")
+     */
+    private $person;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $content;
+
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $posted;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
+    public function getPerson(): ?Person
+    {
+        return $this->person;
+    }
+
+
+    public function setPerson(?Person $person): self
+    {
+        $this->person = $person;
+
+
+        return $this;
+    }
+
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+
+
+        return $this;
+    }
+
+
+    public function getPosted(): ?\DateTimeInterface
+    {
+        return $this->posted;
+    }
+
+
+    public function setPosted(\DateTimeInterface $posted): self
+    {
+        $this->posted = $posted;
+
+
+        return $this;
+    }
+}
+
+
+
+
+リスト5-25
+<?php
+
+
+namespace App\Repository;
+
+
+use App\Entity\Message;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+
+
+/**
+ * @method Message|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Message|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Message[]    findAll()
+ * @method Message[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class MessageRepository extends ServiceEntityRepository
+{
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, Message::class);
+    }
+
+
+    public function findAll()
+    {
+        return $this->findBy(array(), array('posted' => 'DESC'));
+    }
+
+
+}
+
+
+
+
+リスト5-26
+/**
+ * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="person")
+ */
+private $messages;
+
+
+public function __construct()
+{
+    $this->messages = new ArrayCollection();
+}
+
+
+/**
+ * @return Collection|Message[]
+ */
+public function getMessages(): Collection
+{
+    return $this->messages;
+}
+
+
+public function addMessage(Message $message): self
+{
+    if (!$this->messages->contains($message)) {
+        $this->messages[] = $message;
+        $message->setPerson($this);
+    }
+
+
+    return $this;
+}
+
+
+public function removeMessage(Message $message): self
+{
+    if ($this->messages->contains($message)) {
+        $this->messages->removeElement($message);
+        // set the owning side to null (unless already changed)
+        if ($message->getPerson() === $this) {
+            $message->setPerson(null);
+        }
+    }
+
+
+    return $this;
+}
+
+
+public function __toString()
+{
+    return $this->getName();
+}
+
+
+
+
+リスト5-27
+<?php
+namespace App\Controller;
+
+
+use App\Entity\Person;
+use App\Entity\Message;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+use App\Form\PersonType;
+use App\Form\MessageType;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+class MessageController extends AbstractController
+{
+    /**
+     * @Route("/message", name="message")
+     */
+    public function index()
+    {
+        $repository = $this->getDoctrine()
+            ->getRepository(Message::class);
+        $data = $repository->findall();
+        return $this->render('message/index.html.twig', [
+           'title' => 'Message',
+           'data' => $data,
+       ]);
+    }
+
+
+    /**
+     * @Route("/message/create", name="message/create")
+     */
+    public function create(Request $request, ValidatorInterface $validator)
+    {
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+
+        if ($request->getMethod() == 'POST'){
+            $message = $form->getData();
+            $errors = $validator->validate($message);
+            if (count($errors) == 0) {
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($message);
+                $manager->flush();
+                return $this->redirect('/message');
+            } else {
+                $msg = "oh...can't posted...";
+            }
+        } else {
+            $msg = 'type your message!';
+        }  
+        return $this->render(message/create.html.twig', [
+            'title' => 'Hello',
+            'message' => $msg,
+            'form' => $form->createView(),
+        ]);
+
+
+    }
+}
+
+
+
+
+リスト5-28
+<?php
+namespace App\Form;
+
+
+use App\Entity\Person;
+use App\Entity\Message;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+class MessageType extends AbstractType
+{
+
+
+public function buildForm(FormBuilderInterface $builder, array $options)
+{
+    $builder
+        ->add('person', EntityType::class, array(
+            'class' => 'App\Entity\Person',
+        ))
+        ->add('content',TextType::class)
+        ->add('posted', DateTimeType::class)
+        ->add('save', SubmitType::class, array('label' => 'Click'));
+}
+
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => Message::class,
+        ));
+    }
+}
+
+
+
+
+リスト5-29――message/index.html.twig
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Messages</h2>
+<table>
+<tr>
+    <th>Id</th>
+    <th>Content</th>
+    <th>Name</th>
+    <th>posted</th>
+</tr>
+{% for item in data %}
+<tr>   
+    <td>{{item.id}}</td>
+    <td>{{item.content}}</td>
+    <td>{{item.person.name}}</td>
+    <td>{{item.posted.format('Y-m-d H:i:s')}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
+
+リスト5-30――message/create.html.twig
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>{{message}}</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+{% endblock %}
+
+
+
+
+リスト5-31
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Person table</h2>
+<table>
+<tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Mail</th>
+    <th>Age</th>
+    <th>Messages</th>
+</tr>
+{% for item in data %}
+<tr>   
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.mail}}</td>
+    <td>{{item.age}}</td>
+    <td><ul>
+    {% for msg in item.messages %}
+    <li>{{msg.content}}</li>
+    {% endfor %}
+    </ul></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+
+
+リスト6-1
+// use Doctrine\ORM\Tools\Pagination\Paginator; を追記
+
+
+public function getPage($currentPage = 1, $limit=5)
+{
+    $query = $this->createQueryBuilder('p')
+        ->orderBy('p.posted', 'DESC')
+        ->getQuery();
+
+
+    $paginator = $this->paginate($query, $currentPage, $limit);
+
+
+    return $paginator;
+}
+
+
+public function paginate($dql, $page = 1, $limit = 5)
+{
+    $paginator = new Paginator($dql);
+
+
+    $paginator->getQuery()
+        ->setFirstResult($limit * ($page - 1))
+        ->setMaxResults($limit);
+
+
+    return $paginator;
+}
+
+
+
+
+リスト6-2
+/**
+ * @Route("/message/page/{page}", name="message/page")
+ */
+public function page($page=1)
+{
+    $limit = 3;
+    $repository = $this->getDoctrine()
+        ->getRepository(Message::class);
+    $paginator = $repository->getPage($page, $limit);
+    $maxPages = ceil($paginator->count() / $limit);
+
+
+    return $this->render('message/page.html.twig', [
+        'title' => 'Message',
+        'data' => $paginator->getIterator(),
+        'maxPages' => $maxPages,
+        'thisPage' => $page,
+    ]);
+}
+
+
+
+
+リスト6-3
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Messages</h2>
+<p>{{ thisPage }} page.</p>
+<table>
+<tr>
+    <th>Id</th>
+    <th>Content</th>
+    <th>Name</th>
+    <th>posted</th>
+</tr>
+{% for item in data %}
+<tr>   
+    <td>{{item.id}}</td>
+    <td>{{item.content}}</td>
+    <td>{{item.person.name}}</td>
+    <td>{{item.posted.format('Y-m-d H:i:s')}}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+{% include '/message/pagenav.html.twig' with [thisPage, maxPages] %}
+
+
+{% endblock %}
+
+
+
+
+リスト6-4
+<style>
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: 7px 10px;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #00f;
+  background-color: #fff;
+  border: 1px solid #aaf;
+}
+
+
+.page-link:hover {
+  z-index: 2;
+  color: #0056b3;
+  text-decoration: none;
+  background-color: #e9ecef;
+  border-color: #aaf;
+}
+
+
+.page-item:first-child .page-link {
+  margin-left: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px
+}
+</style>
+
+
+{% if maxPages > 1 %}
+<ul class="pagination">
+    <li class="page-item">
+        <a class="page-link" href="{{ path('message/page', {page:1}) }}">|≪</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" href="{{ path('message/page', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">≪</a>
+    </li>
+
+
+    {% for i in (thisPage - 2)..(thisPage + 2) %}
+    {% if i > 0  %}
+    {% if i <= maxPages %}
+    <li class="page-item">
+    <a class="page-link" href="{{ path('message/page', {page: i}) }}">{{ i }}</a>
+    </li>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
+
+    <li class="page-item">
+        <a class="page-link" href="{{ path('message/page', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">≫</a>
+    </li>
+    <li class="page-item">
+        <a class="page-link" href="{{ path('message/page', {page: maxPages}) }}">≫|</a>
+    </li>
+</ul>
+{% endif %}
+
+
+
+
+リスト6-5
+// use Symfony\Component\Finder\Finder; を追記
+
+
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $finder = new Finder();
+    $finder->files()->in(__DIR__);
+
+
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => __DIR__,
+        'finder' => $finder,
+    ]);
+}
+
+
+
+
+リスト6-6
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Hello</h2>
+<p>{{ message }}</p>
+<ul>
+{% for file in finder %}
+<li>{{file.filename}}</li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+
+
+
+リスト6-7
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $finder = new Finder();
+    $finder->directories()->in('../src/'); // ●
+
+
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => 'get file/folder', 
+        'finder' => $finder,
+    ]);
+}
+
+
+
+
+リスト6-8
+$finder->files()->in(['../src/Controller', '../src/Entity/', '../src/Repository/']);
+
+
+
+
+リスト6-9
+$finder->files()->depth('<=1')->in('../templates/');
+
+
+
+
+リスト6-10
+$finder->files()->depth('<=2')->name('*.yaml')->in('../../');
+
+
+
+
+リスト6-11
+$finder->files()->depth('<=0')->notName('*.lock')->in('../');
+
+
+
+
+リスト6-12
+$finder->files()->depth('<=1')->contains('* @')->in('../src/');
+
+
+
+
+リスト6-13
+$finder->files()->depth('<=1')->path('src')->path('templates')->in('../');
+
+
+
+
+リスト6-14
+$finder->files()->depth('<=2')->size('>20480')->in('../');
+
+
+
+
+リスト6-15
+$finder->files()->path('templates')->date('> 2018-09-18')->in('../');
+
+
+
+
+リスト6-16
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $finder = new Finder();
+    $finder->files()->path('var/log')->name('dev.log')->in('../');
+    $file = null;
+    foreach($finder as $item) {
+        $file = $item;
+        break;
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => 'get file/folder',
+        'file' => $file,
+    ]);
+}
+
+
+
+
+リスト6-17
+{% block body %}
+<h2>Hello</h2>
+<p>{{ message }}</p>
+<pre>{{ file.contents }}</pre>
+{% endblock %}
+
+
+
+
+リスト6-18
+// 以下のuseを追記
+// use Symfony\Component\Filesystem\Filesystem;
+// use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $fileSystem = new Filesystem();
+    $temp = __DIR__ . '/temp';
+    
+    try {
+        if (!$fileSystem->exists($temp)) {
+            $fileSystem->mkdir($temp);
+        }
+        $fileSystem->appendToFile($temp . '/temp.txt', "WRITE TEXT!!!   ");
+        $fileSystem->appendToFile($temp . '/temp.txt', date("Y-m-d H:i:s"));
+        $fileSystem->appendToFile($temp . '/temp.txt', "\n");
+    } catch (IOExceptionInterface $e) {
+        echo "ERROR! ". $e->getPath();
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => 'get file/folder',
+    ]);
+}
+
+
+
+
+リスト6-19
+{% block body %}
+<h2>Hello</h2>
+<p>{{ message }}</p>
+{% endblock %}
+
+
+
+
+リスト6-20
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $form = $this->createForm(HelloType::class, null);
+    $form->handleRequest($request);
+
+
+    if ($request->getMethod() == 'POST'){
+        $this->addFlash('info.mail', 'mail:' . $form->getData()['mail']);
+        $msg = 'Hello, ' . $form->getData()['name'] . '!!';
+    } else {
+        $msg = 'Send Form';
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => $msg,
+        'form' => $form->createView(),
+    ]);
+}
+
+
+
+
+リスト6-21
+<?php
+namespace App\Form;
+
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class HelloType extends AbstractType
+{
+
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name',TextType::class)
+            ->add('mail',EmailType::class)
+            ->add('save', SubmitType::class, array('label' => 'Click'));
+    }
+
+
+}
+
+
+
+
+リスト6-22
+{% block body %}
+<style>
+.flash-notice {
+    color:red;
+    font-size:16pt;
+    font-weight:bold;
+}
+</style>
+<h2>Hello</h2>
+{% for message in app.flashes('info.mail') %}
+    <div class="flash-notice">
+        {{ message }}
+    </div>
+{% endfor %}
+<p>{{ message }}</p>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+{% endblock %}
+
+
+
+
+リスト6-23
+class HelloForm
+{
+    private $name;
+    private $mail;
+
+
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+    public function getMail()
+    {
+        return $this->mail;
+    }
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
+    }
+
+
+    public function __toString()
+    {
+        return '*** ' . $this->name . ' [' . $this->mail . '] ***';
+    }
+}
+
+
+
+
+リスト6-24
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    $formobj = new HelloForm();
+    $form = $this->createForm(HelloType::class, $formobj);
+    $form->handleRequest($request);
+
+
+    if ($request->getMethod() == 'POST'){
+        $formobj = $form->getData();
+        $this->addFlash('info.mail', $formobj);
+        $msg = 'Hello, ' . $formobj->getName() . '!!';
+    } else {
+        $msg = 'Send Form';
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => $msg,
+        'form' => $form->createView(),
+    ]);
+}
+
+
+
+
+リスト6-25
+// use Symfony\Component\HttpFoundation\Session\SessionInterface; を追記
+
+
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request, SessionInterface $session)
+{   
+    $formobj = new HelloForm();
+    $form = $this->createForm(HelloType::class, $formobj);
+    $form->handleRequest($request);
+
+
+    if ($request->getMethod() == 'POST'){
+        $formobj = $form->getData();
+        $session->getFlashBag()->add('info.mail', $formobj);
+        $msg = 'Hello, ' . $formobj->getName() . '!!';
+    } else {
+        $msg = 'Send Form';
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => $msg,
+        'bag' => $session->getFlashBag(),
+        'form' => $form->createView(),
+    ]);
+}
+
+
+
+
+リスト6-26
+/**
+ * @Route("/clear", name="clear")
+ */
+public function clear(Request $request, SessionInterface $session)
+{  
+    $session->getFlashBag()->clear();
+    return $this->redirect('/hello');
+}
+
+
+
+
+リスト6-27
+{% block body %}
+<style>
+.flash-notice {
+    color:red;
+    font-size:16pt;
+    font-weight:bold;
+}
+</style>
+<h2>Hello</h2>
+<ol>
+{% for message in bag.peek('info.mail') %}
+    <div class="flash-notice">
+        <li>{{ message.name }}</li>
+    </div>
+{% endfor %}
+</ol>
+<p>{{ message }}</p>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+{% endblock %}
+
+
+
+
+リスト6-28
+<?php
+
+
+namespace App\Entity;
+
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("username")
+ */
+class User implements UserInterface, \Serializable
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $username;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+
+        return $this;
+    }
+
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+
+        return $this;
+    }
+
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+
+        return $this;
+    }
+
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+
+    public function setActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+
+        return $this;
+    }
+
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
+
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+
+    public function getRoles()
+    {
+        if ($this->username == 'admin') {
+            return array('ROLE_ADMIN');
+        } else {
+            return array('ROLE_USER');
+        }
+        
+    }
+
+
+    public function eraseCredentials()
+    {
+    }
+
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isActive,
+        ));
+    }
+
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->isActive,
+        ) = unserialize($serialized, array('allowed_classes' => false));
+    }    
+}
+
+
+
+
+リスト6-29
+<?php
+namespace App\Controller;
+
+
+use App\Form\UserType;
+use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+
+class RegisterController extends AbstractController
+{
+    /**
+     * @Route("/register", name="register")
+     */
+    public function register(Request $request, 
+            UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+
+
+        $form->handleRequest($request);
+
+
+        if ($request->getMethod() == 'POST'){
+            if ($form->isValid()) {
+                $password = $passwordEncoder->encodePassword
+                        ($user, $user->getPassword());
+                $user->setPassword($password);
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($user);
+                $manager->flush();
+                return $this->redirectToRoute('login');
+            }
+        }
+
+
+        return $this->render(
+            'registration/register.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+}
+
+
+
+
+リスト6-30
+<?php
+namespace App\Form;
+
+
+use App\Entity\User;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+
+class UserType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('username', TextType::class)
+            ->add('password', PasswordType::class)
+            ->add('email', EmailType::class)
+            ->add('register', SubmitType::class);
+    }
+
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => User::class,
+        ));
+    }
+}
+
+
+
+
+リスト6-31
+{% extends 'base.html.twig' %}
+
+
+{% block page %}Register{% endblock %}
+{% block title %}Register{% endblock %}
+
+
+{% block body %}
+<p>user registration.</p>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+
+
+{% endblock %}
+
+
+
+
+リスト6-32
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+
+class SecurityController extends AbstractController
+{
+
+
+    /**
+     * @Route("/login", name="login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils)
+    {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        if ($this->getUser() == null) {
+            $user = 'not logined...';
+        } else {
+            $user = 'logined: ' . $this->getUser()->getUsername();
+        }
+        
+        return $this->render('security/login.html.twig', array(
+            'error' => $error,
+            'user' => $user,
+        ));
+    }
+
+
+}
+
+
+
+
+リスト6-33
+{% extends 'base.html.twig' %}
+
+
+{% block page %}Login{% endblock %}
+{% block title %}Login{% endblock %}
+
+
+{% block body %}
+<p>login</p>
+<p>{{user}}</p>
+{% if error %}
+<p>{{ error.messageKey }}</p>
+{% endif %}
+
+
+<form action="{{ path('login') }}" method="post">
+<table>
+    <tr>
+    <th><label for="username">Username:</label></th>
+    <td><input type="text" id="username" name="_username" /></td>
+    </tr>
+    <tr>
+    <th><label for="password">Password:</label></th>
+    <td><input type="password" id="password" name="_password" /></td>
+    <tr><th></th><td><button type="submit">login</button></td></tr>
+</table>
+</form>
+{% endblock %}
+
+
+
+
+リスト6-34
+<?php
+namespace App\Controller;
+
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+
+class AdminController extends AbstractController
+{
+    /**
+     * @Route("/admin")
+     */
+    public function admin()
+    {
+        return $this->render('admin/admin.html.twig', [
+            'title' => 'Admin',
+            'message' => 'admin page',
+            'user' => $this->getUser(),
+        ]);
+    }
+
+
+}
+
+
+
+
+リスト6-35
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>{{message}}</h2>
+<p>user: {{ user.username }}</p>
+<p>mail: {{ user.email }}</p>
+{% endblock %}
+
+
+
+
+リスト6-36
+// use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request)
+{   
+    if (!$this->getUser()->isActive()) {
+        throw new AccessDeniedException('Unable to access!');
+    }
+    
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => 'User Information.',
+        'user' => $this->getUser(),
+    ]);
+}
+
+
+
+
+リスト6-37
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>{{message}}</h2>
+<table>
+<tr>
+<th>ID</th><td>{{user.id}}</td>
+</tr>
+<tr>
+<th>Name</th><td>{{user.username}}</td>
+</tr><tr>
+<th>Mail</th><td>{{user.email}}</td>
+</tr>
+<tr>
+<th>Role</th><td>{{user.roles[0]}}</td>
+</tr>
+</table>
+{% endblock %}
+
+
+
+
+リスト6-38
+security:
+    providers:
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+
+        main:
+            anonymous: ~
+            pattern:    ^/
+            provider: our_db_provider
+
+
+            form_login:
+                login_path: login
+                check_path: login
+            logout:
+                path:   logout
+                target: login
+                invalidate_session: false
+
+
+    access_control:
+         - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/register, roles: ROLE_ADMIN }
+         - { path: ^/hello, roles: [ROLE_USER, ROLE_ADMIN] }
+
+
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+
+
+
+
+リスト6-39
+logout:
+    path: /logout
+
+
+
+
+リスト7-1
+<?php
+namespace App\Service;
+
+
+class MyService
+{
+    public function getMessage()
+    {
+        $msgs = [
+            'これは、オリジナルのメッセージ・サービスです。',
+            'これは、新しいメッセージです。',
+            '……あ。すいません、ちょっと居眠りしてました。',
+            'はい！ メッセージは、何もありません！',
+        ];
+        $res = array_rand($msgs);
+        return $msgs[$res];
+    }
+}
+
+
+
+
+リスト7-2
+// use App\Service\MyService;
+
+
+/**
+ * @Route("/hello", name="hello")
+ */
+public function index(Request $request, MyService $service)
+{   
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => $service->getMessage(),
+    ]);
+}
+
+
+
+
+リスト7-3
+<?php
+namespace App\Service;
+
+
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NoResultException;
+
+
+class MyService
+{
+    private $manager;
+
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
+
+    public function getPerson($id = 1)
+    {
+        $query = $this->manager->createQuery(
+            "SELECT p FROM App\Entity\Person p 
+            WHERE p.id = {$id}");
+       try {
+            return $query->getSingleResult();
+        } catch(NoResultException $e){
+            return null;
+        }
+    }
+
+
+    public function getMessage()
+    {
+         ……略……
+    }
+}
+
+
+
+
+リスト7-4
+/**
+ * @Route("/hello/{id}", name="hello")
+ */
+public function index(Request $request, int $id=1, MyService $service)
+{   
+    $person = $service->getPerson($id);
+    $msg = $person == null ? 'no person.' : 'name: ' . $person;
+    return $this->render('hello/index.html.twig', [
+        'title' => 'Hello',
+        'message' => $msg,
+    ]);
+}
+
+
+
+
+リスト7-5
+parameters:
+    locale: 'en'
+    entity_type: 'App\Entity\User' #●
+
+
+
+
+リスト7-6
+services:
+    # ……中略……
+    App\Service\MyService:
+        arguments:
+            $entityType: '%entity_type%'
+
+
+
+
+リスト7-7
+class MyService
+{
+    private $manager;
+    private $entityType;
+
+
+    public function __construct(string $entityType, 
+            EntityManagerInterface $manager)
+    {
+        $this->entityType = $entityType;
+        $this->manager = $manager;
+    }
+
+
+    public function getPerson($id = 1)
+    {
+        $query = $this->manager->createQuery(
+            'SELECT p FROM ' . $this->entityType 
+                . " p WHERE p.id = {$id}" );
+       try {
+            return $query->getSingleResult();
+        } catch(NoResultException $e){
+            return null;
+        }
+    }
+
+
+    ……略……
+}
+
+
+
+
+リスト7-8
+public function __toString()
+{
+    return '[' . $this->getUsername() . ', ' . $this->getEmail() . ']';
+}
+
+
+
+
+リスト7-9
+<?php
+namespace App\Validator\Constraints;
+
+
+use Symfony\Component\Validator\Constraint;
+
+
+/**
+ * @Annotation
+ */
+class NeverUpper extends Constraint
+{
+    public $message = '* "{{value}}" には大文字が含まれています。';
+}
+
+
+
+
+リスト7-10
+<?php
+namespace App\Validator\Constraints;
+
+
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
+
+class NeverUpperValidator extends ConstraintValidator
+{
+    public function validate($value, Constraint $constraint)
+    {
+        if ($value == null) {
+            return;
+        }
+        if (!is_string($value)) {
+            throw new UnexpectedTypeException($value, 'string');
+        }
+
+
+        if (preg_match('/[A-Z]+/', $value, $matches)) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{value}}', $value)
+                ->addViolation();
+        }
+    }
+}
+
+
+
+
+リスト7-11
+// use App\Validator\Constraints as MyAssert;
+
+
+/**
+ * @ORM\Column(type="string", length=255)
+ * @MyAssert\NeverUpper
+ */
+private $content;
+
+
+
+
+リスト7-12
+<?php
+namespace App\Validator\Constraints;
+
+
+use Symfony\Component\Validator\Constraint;
+
+
+/**
+ * @Annotation
+ */
+class UserChecker extends Constraint
+{
+    public $message = '* "{{val_A}}" は "{{val_B}}" {{do}}. *';
+
+
+    public function getTargets()
+    {
+        return self::CLASS_CONSTRAINT;
+    }
+}
+
+
+
+
+リスト7-13
+<?php
+namespace App\Validator\Constraints;
+
+
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
+
+class UserCheckerValidator extends ConstraintValidator
+{
+    public function validate($value, Constraint $constraint)
+    {
+        if ($value == null) {
+            return;
+        }
+
+
+        if ($value>getUsername() == $value->getPassword()) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{val_A}}', $value->getEmail())
+                ->setParameter('{{val_B}}', $value->getUsername())
+                ->setParameter('{{do}}', 'と異なる値にする必要があります.')
+                ->addViolation();
+        } elseif (strpos($value->getUsername(), 
+                $value->getPassword()) !== FALSE) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{val_A}}', 'パスワード')
+                ->setParameter('{{val_B}}', $value->getUsername())
+                ->setParameter('{{do}}', 'に含まれていてはいけません.')
+                ->addViolation();
+        } elseif (strpos($value->getPassword(), 
+                $value->getUsername()) !== FALSE) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{val_A}}', $value->getUsername())
+                ->setParameter('{{val_B}}', 'パスワード')
+                ->setParameter('{{do}}', 'に含まれていてはいけません.')
+                ->addViolation();
+        }
+    }
+}
+
+
+
+
+リスト7-14
+// use App\Validator\Constraints as MyAssert;
+
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("username")
+ * @MyAssert\UserChecker
+ */
+class User implements UserInterface, \Serializable
+{
+    ……略……
+}
+
+
+
+
+リスト7-15
+<?php
+namespace App\Twig;
+
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use App\Twig\HeloTokenParser;
+
+
+class PriceTwigExtension extends AbstractExtension
+{
+    public function getFilters()
+    {
+        return [
+            new TwigFilter('price', [$this, 'priceFilter']),
+        ];
+    }
+
+
+    public function priceFilter($number, $header='￥', $decimals=0)
+    {
+        $price = number_format($number, $decimals, '.', ',');
+        return $header . $price;
+    }
+}
+
+
+
+
+リスト7-16
+/**
+ * @Route("/", name="main")
+ */
+public function main(Request $request, int $id=1, MyService $service)
+{   
+    
+    return $this->render('hello/main.html.twig', [
+        'title' => 'Hello',
+        'number' => 1234500,
+    ]);
+}
+
+
+
+
+リスト7-17
+{% extends 'base.html.twig' %}
+
+
+{% block page %}{{title}}{% endblock %}
+{% block title %}{{title}}{% endblock %}
+
+
+{% block body %}
+<h2>Twigカスタムタグ</h2>
+<p>{{ number|price }}</p>
+<p>{{ number|price('$', 2) }}</p>
+
+
+{% endblock %}
+
+
+
+
+リスト7-18
+<?php
+namespace App\Twig;
+
+
+class HeloTokenParser extends \Twig_TokenParser
+{
+    public function parse(\Twig_Token $token)
+    {
+        $parser = $this->parser;
+        $stream = $parser->getStream();
+        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+
+
+        return new HeloNode($token->getLine(), $this->getTag());
+    }
+
+
+    public function getTag()
+    {
+        return 'helo';
+    }
+
+
+}
+
+
+
+
+リスト7-19
+<?php
+namespace App\Twig;
+
+
+class HeloNode extends \Twig_Node
+{
+    public function __construct($line, $tag = null)
+    {
+        parent::__construct([], [], $line, $tag);
+    }
+
+
+    public function compile(\Twig_Compiler $compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write("echo 'Hello!'")
+            ->raw(";\n");
+    }
+}
+
+
+
+
+リスト7-20
+<?php
+namespace App\Twig;
+
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use App\Twig\HeloTokenParser;
+
+
+class HeloTwigExtension extends AbstractExtension
+{
+    public function getTokenParsers()
+    {
+        return [
+            new HeloTokenParser(),
+        ];
+    }
+
+
+}
+
+
+
+
+リスト7-21
+<p>{% helo %}</p>
+
+
+
+
+リスト7-22
+<?php
+namespace App\Twig;
+
+
+class HeloTokenParser extends \Twig_TokenParser
+{
+    public function parse(\Twig_Token $token)
+    {
+        $parser = $this->parser;
+        $stream = $parser->getStream();
+        $value = $parser->getExpressionParser()->parseExpression(); // ●
+        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+
+
+        return new HeloNode($value, $token->getLine(), $this->getTag());
+    }
+
+
+    public function getTag()
+    {
+        return 'helo';
+    }
+}
+
+
+
+
+リスト7-23
+<?php
+namespace App\Twig;
+
+
+class HeloNode extends \Twig_Node
+{
+    public function __construct(\Twig_Node_Expression $value, $line, $tag = null)
+    {
+        parent::__construct(['value'=>$value], [], $line, $tag);
+    }
+
+
+    public function compile(\Twig_Compiler $compiler)
+    {
+        $compiler
+            ->addDebugInfo($this)
+            ->write("echo 'Hello, ' .")
+            ->subcompile($this->getNode('value')) // ●
+            ->raw(". '!';\n");
+    }
+}
+
+
+
+
+リスト7-24
+<p>{% helo "Taro" %}</p>
+<p>{% helo "Hanako" %}</p>
+
+
+
+
+リスト7-25
+<?php
+namespace App\Twig;
+
+
+class HeloTokenParser extends \Twig_TokenParser
+{
+    public function parse(\Twig_Token $token)
+    {
+        $names = [];
+        $values = [];
+        $parser = $this->parser;
+        $stream = $parser->getStream();
+        for($i = 0;$i < 3;$i++){
+            $names['name' . $i] = $stream->expect(\Twig_Token::NAME_TYPE)
+                ->getValue();
+            $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+            $values['value' . $i] = $parser->getExpressionParser()
+                ->parseExpression();
+        }
+        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+
+
+        return new HeloNode($values, $names, 
+            $token->getLine(), $this->getTag());
+    }
+
+
+    public function getTag()
+    {
+        return 'helo';
+    }
+}
+
+
+
+
+リスト7-26
+<?php
+namespace App\Twig;
+
+
+class HeloNode extends \Twig_Node
+{
+    public function __construct($values, $names, $line, $tag = null)
+    {
+        parent::__construct($values, $names, $line, $tag);
+    }
+
+
+    public function compile(\Twig_Compiler $compiler)
+    {
+        $name = 'noname';
+        $age = 0;
+        $mail = 'no@mail';
+        
+        for($i = 0;$i < 3;$i++){
+            if ($this->getAttribute('name' . $i) == 'name'){
+                $name = $this->getNode('value' . $i);
+            }
+            if ($this->getAttribute('name' . $i) == 'age'){
+                $age = $this->getNode('value' . $i);
+            }
+            if ($this->getAttribute('name' . $i) == 'mail'){
+                $mail = $this->getNode('value' . $i);
+            }
+        }
+        
+        $compiler
+            ->addDebugInfo($this)
+            ->raw("echo 'Hello, I am ' . ")
+            ->subcompile($name)
+            ->raw(" . '(' . ")
+            ->subcompile($age)
+            ->raw(" . ').<br> please mail to ' . ")
+            ->subcompile($mail)
+            ->raw(" . '!';\n");
+    }
+}
+
+
+
+
+リスト7-27
+<p>{% helo name="Taro" age="36" mail="taro@yamada" %}</p>
+<p>{% helo name="Hanako" mail="hanako@flower" age="29" %}</p>
